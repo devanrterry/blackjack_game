@@ -26,10 +26,22 @@
 
 //---------constants--------//
 
-//---------app's state (variables--------//
+const SUITS = ['diamonds', 'hearts', 'spades', 'clubs'];
+
+const VALUES = ['two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 
+                'ten', 'jack', 'queen', 'king', 'ace'];
+
+//---------app's state (variables)--------//
+
+
 
 //---------cached element references--------//
 
 //---------event listeners--------//
 
 //---------functions--------//
+
+function init(){
+
+};
+
