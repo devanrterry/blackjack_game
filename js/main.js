@@ -38,28 +38,42 @@ const VALUES = ['A', '02', '03', '04', '05', '06', '07', '08', '09',
 let cardDeck = [];
 let playerHand = [];
 let dealerHand = [];
+let playerTurn = true;
+let playerTotal = 0;
+let dealerTotal = 0;
+let gameComplete = false;
+
+class CardObj {
+    constructor(rank, value, faceUp = false){
+        this.rank = rank;
+        this.value = value;
+        this.faceUp = faceUp;
+    }
+}
 
 
 //---------cached element references--------//
 
-playGame = document.querySelector('#begin');
-hitBtn = document.querySelector('#hitBtn');
-stayBtn = document.querySelector('#stayBtn');
+// playGame = document.querySelector('#begin');
+// hitBtn = document.querySelector('#hitBtn');
+// stayBtn = document.querySelector('#stayBtn');
 
 
 //---------event listeners--------//
 
-playGame.addEventListener('click', startGame);
-hitBtn.addEventListener('click', dealCard);
-stayBtn.addEventListener('click', stay);
+// playGame.addEventListener('click', startGame);
+// hitBtn.addEventListener('click', dealCard);
+// stayBtn.addEventListener('click', stay);
 
 
 
 //---------functions--------//
 
 function init(){
+    createDeck();
+}
 
-};
+init();
 
 function getCardValue(card){
     switch (value){
@@ -90,11 +104,20 @@ function getCardValue(card){
     };
 };
 
-function getRandomCard(card){
-let random = Math.floor(Math.random() * 51);
-    return cardDeck[random]
-};
+function getRandomCard(){
+    let random = Math.floor(Math.random() * 51);
+    return cardDeck[random];
+}
 
 function displayCard(){
 
+}
+
+function createDeck() {
+    for (suit of SUITS){
+        for (value of VALUES){
+            let card = new CardObj(suit, value);
+            cardDeck.push(card);
+        }
+    }
 }
