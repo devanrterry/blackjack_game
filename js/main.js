@@ -18,6 +18,7 @@ let dealerTotal = 0;
 let gameComplete = false;
 
 //Using class to create a card object that will be pushed into the cardDeck array whenever the createDeck function is called.
+
 class CardObj {
     constructor(suit, value, faceUp = true){
         this.suit = suit;
@@ -29,55 +30,84 @@ class CardObj {
 
 //---------cached element references--------//
 
-// playGame = document.querySelector('#begin');
+begin = document.querySelector('#begin');
 hitBtn = document.querySelector('#hitBtn');
-// stayBtn = document.querySelector('#stayBtn');
+stayBtn = document.querySelector('#stayBtn');
+dealerContainer = document.querySelector(".dealer-container");
+playerContainer = document.querySelector(".player-container");
 
-let imgSrc = document.querySelector('#card-container img')
+// imgSrc = document.querySelector('#card-container img')
 
 //---------event listeners--------//
 
-// playGame.addEventListener('click', startGame);
+begin.addEventListener('click', init);
 hitBtn.addEventListener('click', dealCard);
-// stayBtn.addEventListener('click', stay);
+stayBtn.addEventListener('click', stay);
 
 
 
 //---------functions--------//
 
 function init(){
-    createDeck();
+    beginGame();
+    begin.remove();
 }
 
-init();
+function beginGame(){
+    createDeck();
+
+    for (let i = 0; i < 2; ++i){
+        dealCard();
+    }
+
+    playerTurn = false;
+    for (let i = 0; i < 2; ++i){
+        dealCard();
+    }
+
+    playerTurn = true;
+    render();
+
+    console.log("DEALER HAND", dealerHand)
+    console.log("PLAYER HAND", playerHand)
+}
+
+function render(){
+    document.querySelector('#turn').textContent = whosTurn() + "\'s Turn";
+
+    playerContainer.innerHTML = '';
+    dealerContainer.innerHTML = '';
+
+    playerHand.forEach(function(i){
+        let nextCardImg = document.createElement('img');
+        nextCardImg.setAttribute("src", cardImg(i));
+        nextCardImg.style.width = "100px";
+        nextCardImg.style.border = "1px solid black";
+        nextCardImg.style.borderRadius = "5px";
+        nextCardImg.style.margin = "10px";
+        playerContainer.appendChild(nextCardImg);
+    });
+
+    dealerHand.forEach(function(i){
+        let nextCardImg = document.createElement('img');
+        nextCardImg.setAttribute("src", cardImg(i));
+        nextCardImg.style.width = "100px";
+        nextCardImg.style.border = "1px solid black";
+        nextCardImg.style.borderRadius = "5px";
+        nextCardImg.style.margin = "10px";
+        dealerContainer.appendChild(nextCardImg);
+    });
+}
 
 //Using the switch function technique to assign numerical values to the VALUES array.
 function getCardValue(card){
-    switch (value){
-        case 'ace':
-            return 1;
-        case 'two':
-            return 2;
-       case 'three':
-            return 3;
-        case 'four':
-            return 4;
-        case 'five':
-            return 5;
-        case 'six':
-            return 6;
-        case 'seven':
-            return 7;
-        case 'eight':
-            return 8;
-        case 'nine':
-            return 9;
-        case 'ten':
+    switch (card.value){
         case 'jack':   
         case 'queen':  
         case 'king':
             return 10;
-            
+        default:
+            return Number(card.value);
     };
 };
 
@@ -88,9 +118,6 @@ function getRandomCard(){
     return cardDeck[random];
 }
 
-function displayCard(){
-
-}
 
 //This function takes the empty cardDeck array and populates it by running a nested for loop through the values and suits, 
 //creating a new card object each time.
@@ -106,17 +133,23 @@ function createDeck() {
 }
 
 //This function sets the image source of the card container to whatever card was drawn through the getRandomCard funciton.
+
 function dealCard() {
-    let randomCard = getRandomCard();
-    console.log(randomCard);
-    imgSrc.setAttribute('src', cardImg(randomCard));
-}
+    let nextCard = getRandomCard();
+    if (playerTurn){
+        playerHand.push(nextCard);
+    } else {
+        dealerHand.push(nextCard);
+    }
 
-function stay() {
+    // playerTurn ? playerTurn = false : playerTurn = true;
+    
 
+    render();
 }
 
 //This function sets the image of the card when called in the dealCard function above.
+
 function cardImg(card){
     if(card.faceUp){
         return `images/${card.suit}/${card.suit}-r${card.value}.svg`;
@@ -125,10 +158,38 @@ function cardImg(card){
     }
 }
 
+function whosTurn(){
+    return playerTurn ? 'Player' : 'Dealer';
+}
 
+  
+  function stay() {
+    playerTurn ? playerTurn = false : playerTurn = true;
+    render();    
+}
 
+function countHandTotal(handArray){
+    let sum = 0;
+    let aceArr = [];
+    handArray.forEach(function(card){
+        if (card.suit === 'A'){
+            aceArr.push(card);
+        }
+        else {
+            sum += card.value();
+        }
+    });
+    aceArr.forEach(function(i){
+        if (sum + 11 <= 21){
+            sum += 11;
+        } else {
+            sum += 1;
+        }
+    });
+    return sum;
+}
 
-
+function determineWinner()
 
 
 // BlackJack Game Pseudocode
