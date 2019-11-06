@@ -51,6 +51,7 @@ stayBtn.addEventListener('click', stay);
 function init(){
     beginGame();
     begin.remove();
+    showScores();
 }
 
 function beginGame(){
@@ -162,6 +163,19 @@ function whosTurn(){
     render();    
 }
 
+
+function showScores(){
+    let playerTotal = document.createElement('div');
+    playerTotal.id = 'player-total';
+    playerTotal.textContent = countHandTotal(playerHand);
+    playerContainer.appendChild(playerTotal);
+
+    let dealerTotal = document.createElement('div');
+    dealerTotal.id = 'dealer-total';
+    dealerTotal.textContent = countHandTotal(dealerHand);
+    dealerContainer.appendChild(dealerTotal);
+};
+
 function countHandTotal(handArray){
     let sum = 0;
     let aceArr = [];
@@ -170,7 +184,7 @@ function countHandTotal(handArray){
             aceArr.push(card);
         }
         else {
-            sum += card.value();
+            sum += card.value;
         }
     });
     aceArr.forEach(function(i){
@@ -186,8 +200,8 @@ function countHandTotal(handArray){
 function determineWinner(){
     let playerPoints = countHandTotal(playerHand);
     let dealerPoints = countHandTotal(dealerHand);
-    let message = '';
-    if (playerPoints > 21){
+    let message = document.querySelector('#message');
+      if (playerPoints > 21){
         message = 'Dealer wins!'
     } else if (dealerPoints > 21 && playerPoints <= 21){
         message = 'Player wins!'

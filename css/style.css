@@ -8,7 +8,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: 'Monoton', cursive;
+    font-family: 'Montserrat', sans-serif;
     background-color: rgb(134, 167, 77);
 }
 
@@ -24,16 +24,19 @@ h1 {
 }
 
 button {
-    font-family: 'Monoton', cursive;
+    font-family: 'Montserrat', sans-serif;
     margin: 10px;
+    
 }
 
 .dealer-container {
     background-color: white;
-    border: 2px;
+    border-width: 2px;
+    margin: 20px;
 }
 
 .player-container {
     background-color: white;
-    border: 2px;
+    border-width: 2px;
+    margin: 20px;
 }
