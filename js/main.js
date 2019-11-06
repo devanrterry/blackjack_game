@@ -67,9 +67,6 @@ function beginGame(){
 
     playerTurn = true;
     render();
-
-    console.log("DEALER HAND", dealerHand)
-    console.log("PLAYER HAND", playerHand)
 }
 
 function render(){
@@ -142,9 +139,6 @@ function dealCard() {
         dealerHand.push(nextCard);
     }
 
-    // playerTurn ? playerTurn = false : playerTurn = true;
-    
-
     render();
 }
 
@@ -187,9 +181,28 @@ function countHandTotal(handArray){
         }
     });
     return sum;
-}
+};
 
-function determineWinner()
+function determineWinner(){
+    let playerPoints = countHandTotal(playerHand);
+    let dealerPoints = countHandTotal(dealerHand);
+    let message = '';
+    if (playerPoints > 21){
+        message = 'Dealer wins!'
+    } else if (dealerPoints > 21 && playerPoints <= 21){
+        message = 'Player wins!'
+    } else if (dealerPoints === 21 && playerPoints < 21){
+        message = 'Dealer wins!'
+    } else if (playerPoints === 21 && dealerPoints < 21){
+        message = 'Player wins!'
+    } else if (playerPoints < 21 && dealerPoints < 21 && playerPoints > dealerPoints){
+        message = 'Player wins!'
+    } else if (playerPoints < 21 && dealerPoints < 21 && dealerPoints > playerPoints){
+        message = 'Dealer wins!'
+    } else if (playerPoints === dealerPoints){
+        message = 'Its a tie!'
+    }
+}
 
 
 // BlackJack Game Pseudocode
