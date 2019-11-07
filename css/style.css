@@ -19,19 +19,30 @@ h1 {
 #turn {
     
 }
+
 #begin {
-    
+    /* font-family: 'Montserrat', sans-serif; */
 }
 
-button {
+#hitBtn {
     font-family: 'Montserrat', sans-serif;
     margin: 10px;
-    
+    position: absolute;
+    top: 50%;
+    right: 23%;
+}
+
+#stayBtn {
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    display: inline-block;
+    top: 57%;
+    right: 24%;
 }
 
 .dealer-container {
     background-color: white;
-    border-width: 2px;
+    border-width: 10px;
     margin: 20px;
 }
 
@@ -40,3 +51,4 @@ button {
     border-width: 2px;
     margin: 20px;
 }
+
