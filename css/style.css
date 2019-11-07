@@ -13,7 +13,7 @@ body {
 }
 
 h1 {
-    
+    font-size: 2.5rem;
 }
 
 #turn {
@@ -21,23 +21,26 @@ h1 {
 }
 
 #begin {
-    /* font-family: 'Montserrat', sans-serif; */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
 }
 
 #hitBtn {
     font-family: 'Montserrat', sans-serif;
     margin: 10px;
     position: absolute;
-    top: 50%;
-    right: 23%;
+    top: 65%;
+    right: 17%;
+    font-size: 1.5rem;
 }
 
 #stayBtn {
     font-family: 'Montserrat', sans-serif;
     position: absolute;
     display: inline-block;
-    top: 57%;
-    right: 24%;
+    top: 73%;
+    right: 18%;
+    font-size: 1.5rem;
 }
 
 .dealer-container {
@@ -52,3 +55,10 @@ h1 {
     margin: 20px;
 }
 
+img {
+
+}
+
+#message {
+    font-size: 2rem;
+}

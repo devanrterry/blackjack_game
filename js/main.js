@@ -2,6 +2,16 @@
 
 //---------constants--------//
 
+//Issues to fix: 
+//1. Get Rid of #turn text when game is decided. 
+//2. If player busts, show game results immediately instead of having to click 'Stay'
+//3. Issue when dealer is dealt 20 on the first round, it's dealing another card and automatically busting. On 
+//   first round of game, it's drawing another card for the dealer even if the total exceeds 15. 
+//4. Reformat buttons so they move as the container grows.
+//5. Add a face down card to the side that will serve as the "deck".
+//6. Add a green felt background image.
+
+
 const SUITS = ['diamonds', 'hearts', 'spades', 'clubs'];
 
 const VALUES = ['A', '02', '03', '04', '05', '06', '07', '08', '09', 
@@ -36,9 +46,8 @@ let stayBtn = document.querySelector('#stayBtn');
 let dealerContainer = document.querySelector(".dealer-container");
 let playerContainer = document.querySelector(".player-container");
 let message = document.querySelector('#message')
+let turn = document.querySelector('#turn')
 
-
-// imgSrc = document.querySelector('#card-container img')
 
 //---------event listeners--------//
 
@@ -61,7 +70,9 @@ function init(){
     gameComplete = false;
     beginGame();
     message.textContent = '';
-
+    turn.textContent = '';
+    document.querySelector('h1').textContent = 'Good Luck!';
+    
 }
 
 function beginGame(){
@@ -119,6 +130,7 @@ function render(){
 }
 
 //Using the switch function technique to assign numerical values to the VALUES array.
+
 function getCardValue(card){
     switch (card.value){
         case 'J':   
@@ -163,10 +175,11 @@ function dealCard() {
         dealerHand.push(nextCard);
     }
     let totalCheck = countHandTotal(playerHand)
-    // console.log("TOTAL CHECK: ", totalCheck)
-    if(totalCheck == 21){
+    let dealerCheck = countHandTotal(dealerHand)
+    
+    if(totalCheck == 21 || dealerCheck === 21){
         determineWinner()
-    }
+    };
     render();
 }
 
@@ -206,7 +219,6 @@ function showScores(){
 
     playerPoints = countHandTotal(playerHand);
     dealerPoints = countHandTotal(dealerHand);
-    // console.log(dealerPoints);
 
     let playerTotal = document.createElement('div');
     playerTotal.id = 'player-total';
@@ -243,7 +255,6 @@ function countHandTotal(handArray){
 function determineWinner(){
     let playerPoints = countHandTotal(playerHand);
     let dealerPoints = countHandTotal(dealerHand);
-    // console.log("Hitting determineWinner Function")
       if (playerPoints > 21){
         message.textContent = 'Bust! Dealer wins!'
     } else if (dealerPoints > 21 && playerPoints <= 21){
@@ -259,8 +270,9 @@ function determineWinner(){
     } else if (playerPoints === dealerPoints){
         message.textContent = 'Its a tie!'
     } else {
-        // console.log('hitting else in determineWinner')
+        
     }
+    
 }
 
 
