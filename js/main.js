@@ -30,11 +30,13 @@ class CardObj {
 
 //---------cached element references--------//
 
-begin = document.querySelector('#begin');
-hitBtn = document.querySelector('#hitBtn');
-stayBtn = document.querySelector('#stayBtn');
-dealerContainer = document.querySelector(".dealer-container");
-playerContainer = document.querySelector(".player-container");
+let begin = document.querySelector('#begin');
+let hitBtn = document.querySelector('#hitBtn');
+let stayBtn = document.querySelector('#stayBtn');
+let dealerContainer = document.querySelector(".dealer-container");
+let playerContainer = document.querySelector(".player-container");
+let message = document.querySelector('#message')
+
 
 // imgSrc = document.querySelector('#card-container img')
 
@@ -43,18 +45,28 @@ playerContainer = document.querySelector(".player-container");
 begin.addEventListener('click', init);
 hitBtn.addEventListener('click', dealCard);
 stayBtn.addEventListener('click', stay);
-
+hitBtn.style.display = 'none';
+stayBtn.style.display = 'none';
 
 
 //---------functions--------//
 
 function init(){
+    cardDeck = [];
+    playerHand = [];
+    dealerHand = [];
+    playerTurn = true;
+    playerTotal = 0;
+    dealerTotal = 0;
+    gameComplete = false;
     beginGame();
-    begin.remove();
-    showScores();
+    message.textContent = '';
+
 }
 
 function beginGame(){
+    hitBtn.style.display = 'inline-block';
+    stayBtn.style.display = 'inline-block';
     createDeck();
 
     for (let i = 0; i < 2; ++i){
@@ -67,8 +79,14 @@ function beginGame(){
     }
 
     playerTurn = true;
-    render();
+    createReset();
 }
+
+function createReset(){
+    let reset = document.querySelector('#begin');
+    reset.textContent = 'Reset Game';
+    reset.addEventListener('click', init);
+};
 
 function render(){
     document.querySelector('#turn').textContent = whosTurn() + "\'s Turn";
@@ -95,17 +113,22 @@ function render(){
         nextCardImg.style.margin = "10px";
         dealerContainer.appendChild(nextCardImg);
     });
+
+    showScores();
+    
 }
 
 //Using the switch function technique to assign numerical values to the VALUES array.
 function getCardValue(card){
     switch (card.value){
-        case 'jack':   
-        case 'queen':  
-        case 'king':
-            return 10;
+        case 'J':   
+        case 'Q':  
+        case 'K':
+            return parseInt(10);
+        case 'A':
+            return parseInt(1)
         default:
-            return Number(card.value);
+            return parseInt(card.value);
     };
 };
 
@@ -139,7 +162,11 @@ function dealCard() {
     } else {
         dealerHand.push(nextCard);
     }
-
+    let totalCheck = countHandTotal(playerHand)
+    // console.log("TOTAL CHECK: ", totalCheck)
+    if(totalCheck == 21){
+        determineWinner()
+    }
     render();
 }
 
@@ -158,21 +185,37 @@ function whosTurn(){
 }
 
   
-  function stay() {
+function stay() {
     playerTurn ? playerTurn = false : playerTurn = true;
-    render();    
+    if (playerTurn === false) {
+        dealerPlay();
+        determineWinner();
+    }
+    render();   
+}
+
+function dealerPlay(){
+    while (dealerTotal <= 15){
+        dealCard();
+        dealerTotal = countHandTotal(dealerHand)
+    }
 }
 
 
 function showScores(){
+
+    playerPoints = countHandTotal(playerHand);
+    dealerPoints = countHandTotal(dealerHand);
+    // console.log(dealerPoints);
+
     let playerTotal = document.createElement('div');
     playerTotal.id = 'player-total';
-    playerTotal.textContent = countHandTotal(playerHand);
+    playerTotal.textContent = `Player points: ${playerPoints}`;
     playerContainer.appendChild(playerTotal);
 
     let dealerTotal = document.createElement('div');
     dealerTotal.id = 'dealer-total';
-    dealerTotal.textContent = countHandTotal(dealerHand);
+    dealerTotal.textContent = `Dealer points: ${dealerPoints}`;
     dealerContainer.appendChild(dealerTotal);
 };
 
@@ -180,43 +223,46 @@ function countHandTotal(handArray){
     let sum = 0;
     let aceArr = [];
     handArray.forEach(function(card){
-        if (card.suit === 'A'){
+        if (card.value === 'A'){
             aceArr.push(card);
         }
         else {
-            sum += card.value;
+            sum += getCardValue(card);
         }
     });
-    aceArr.forEach(function(i){
-        if (sum + 11 <= 21){
+    for (ace in aceArr){
+        if ((sum + 11) < 22){
             sum += 11;
         } else {
             sum += 1;
         }
-    });
+    }
     return sum;
 };
 
 function determineWinner(){
     let playerPoints = countHandTotal(playerHand);
     let dealerPoints = countHandTotal(dealerHand);
-    let message = document.querySelector('#message');
+    // console.log("Hitting determineWinner Function")
       if (playerPoints > 21){
-        message = 'Dealer wins!'
+        message.textContent = 'Bust! Dealer wins!'
     } else if (dealerPoints > 21 && playerPoints <= 21){
-        message = 'Player wins!'
+        message.textContent = 'Dealer busts! Player wins!'
     } else if (dealerPoints === 21 && playerPoints < 21){
-        message = 'Dealer wins!'
+        message.textContent = 'Dealer wins!'
     } else if (playerPoints === 21 && dealerPoints < 21){
-        message = 'Player wins!'
+        message.textContent = 'Player wins!'
     } else if (playerPoints < 21 && dealerPoints < 21 && playerPoints > dealerPoints){
-        message = 'Player wins!'
+        message.textContent = 'Player wins!'
     } else if (playerPoints < 21 && dealerPoints < 21 && dealerPoints > playerPoints){
-        message = 'Dealer wins!'
+        message.textContent = 'Dealer wins!'
     } else if (playerPoints === dealerPoints){
-        message = 'Its a tie!'
+        message.textContent = 'Its a tie!'
+    } else {
+        // console.log('hitting else in determineWinner')
     }
 }
+
 
 
 // BlackJack Game Pseudocode
