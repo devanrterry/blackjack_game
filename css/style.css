@@ -1,0 +1,54 @@
+* {
+    box-sizing: border-box;
+  }
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    background-color: rgb(134, 167, 77);
+}
+
+h1 {
+    
+}
+
+#turn {
+    
+}
+
+#begin {
+    /* font-family: 'Montserrat', sans-serif; */
+}
+
+#hitBtn {
+    font-family: 'Montserrat', sans-serif;
+    margin: 10px;
+    position: absolute;
+    top: 50%;
+    right: 23%;
+}
+
+#stayBtn {
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    display: inline-block;
+    top: 57%;
+    right: 24%;
+}
+
+.dealer-container {
+    background-color: white;
+    border-width: 10px;
+    margin: 20px;
+}
+
+.player-container {
+    background-color: white;
+    border-width: 2px;
+    margin: 20px;
+}
+
