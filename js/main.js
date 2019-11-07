@@ -45,7 +45,7 @@ let hitBtn = document.querySelector('#hitBtn');
 let stayBtn = document.querySelector('#stayBtn');
 let dealerContainer = document.querySelector(".dealer-container");
 let playerContainer = document.querySelector(".player-container");
-let message = document.querySelector('#message')
+let message = document.querySelector('h1')
 let turn = document.querySelector('#turn')
 
 
@@ -68,10 +68,10 @@ function init(){
     playerTotal = 0;
     dealerTotal = 0;
     gameComplete = false;
-    beginGame();
     message.textContent = '';
-    turn.textContent = '';
+    beginGame();
     document.querySelector('h1').textContent = 'Good Luck!';
+    render();
     
 }
 
@@ -79,19 +79,17 @@ function beginGame(){
     hitBtn.style.display = 'inline-block';
     stayBtn.style.display = 'inline-block';
     createDeck();
-
     for (let i = 0; i < 2; ++i){
         dealCard();
     }
-
     playerTurn = false;
     for (let i = 0; i < 2; ++i){
         dealCard();
     }
-
     playerTurn = true;
     createReset();
 }
+
 
 function createReset(){
     let reset = document.querySelector('#begin');
@@ -168,20 +166,32 @@ function createDeck() {
 //This function sets the image source of the card container to whatever card was drawn through the getRandomCard funciton.
 
 function dealCard() {
+
     let nextCard = getRandomCard();
     if (playerTurn){
         playerHand.push(nextCard);
     } else {
         dealerHand.push(nextCard);
-    }
-    let totalCheck = countHandTotal(playerHand)
-    let dealerCheck = countHandTotal(dealerHand)
-    
-    if(totalCheck == 21 || dealerCheck === 21){
-        determineWinner()
     };
+
+    playerTotal = countHandTotal(playerHand);
+    if (playerTotal >= 21){
+        stay();
+        return;
+    }
+    checkWinnerAtBegin();
     render();
 }
+
+function checkWinnerAtBegin(){
+    let playerCheck = countHandTotal(playerHand);
+    let dealerCheck = countHandTotal(dealerHand);
+    console.log('totals:', playerCheck, dealerCheck);
+    if(playerCheck === 21 || dealerCheck === 21){
+        determineWinner();
+    };
+}
+
 
 //This function sets the image of the card when called in the dealCard function above.
 
@@ -199,16 +209,19 @@ function whosTurn(){
 
   
 function stay() {
+    console.log("Stay");
     playerTurn ? playerTurn = false : playerTurn = true;
-    if (playerTurn === false) {
+    playerTotal = countHandTotal(playerHand)
+    if (playerTotal >= 21 || !playerTurn) {
         dealerPlay();
-        determineWinner();
     }
+    determineWinner();
     render();   
 }
 
 function dealerPlay(){
-    while (dealerTotal <= 15){
+    dealerTotal = countHandTotal(dealerHand)
+    while (dealerTotal <= 15 && playerTotal < 21){
         dealCard();
         dealerTotal = countHandTotal(dealerHand)
     }
@@ -253,22 +266,26 @@ function countHandTotal(handArray){
 };
 
 function determineWinner(){
+    turn.textContent = '';
     let playerPoints = countHandTotal(playerHand);
     let dealerPoints = countHandTotal(dealerHand);
       if (playerPoints > 21){
-        message.textContent = 'Bust! Dealer wins!'
-    } else if (dealerPoints > 21 && playerPoints <= 21){
-        message.textContent = 'Dealer busts! Player wins!'
-    } else if (dealerPoints === 21 && playerPoints < 21){
-        message.textContent = 'Dealer wins!'
-    } else if (playerPoints === 21 && dealerPoints < 21){
-        message.textContent = 'Player wins!'
-    } else if (playerPoints < 21 && dealerPoints < 21 && playerPoints > dealerPoints){
-        message.textContent = 'Player wins!'
-    } else if (playerPoints < 21 && dealerPoints < 21 && dealerPoints > playerPoints){
-        message.textContent = 'Dealer wins!'
-    } else if (playerPoints === dealerPoints){
-        message.textContent = 'Its a tie!'
+          message.textContent = 'Bust! Dealer wins!'
+        } else if (dealerPoints > 21 && playerPoints <= 21){
+            message.textContent = 'Dealer busts! Player wins!'
+        } else if (dealerPoints === 21 && playerPoints < 21){
+            message.textContent = 'Dealer wins!'
+            console.log("DEALER WINS HIT", message)
+        } else if (playerPoints === 21 && dealerPoints < 21){
+            message.textContent = 'Player wins!'
+            console.log("PLAYER WINS HIT", message)
+        } else if (playerPoints < 21 && dealerPoints < 21 && playerPoints > dealerPoints){
+            message.textContent = 'Player wins!'
+        } else if (playerPoints < 21 && dealerPoints < 21 && dealerPoints > playerPoints){
+            message.textContent = 'Dealer wins!'
+        } else if (playerPoints === dealerPoints){
+            message.textContent = 'Its a tie!'
+            console.log("TIE HIT", message)
     } else {
         
     }
