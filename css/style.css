@@ -13,30 +13,50 @@ body {
 }
 
 h1 {
-    
+    font-size: 2.5rem;
 }
 
 #turn {
     
 }
+
 #begin {
-    
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
 }
 
-button {
+#hitBtn {
     font-family: 'Montserrat', sans-serif;
     margin: 10px;
-    
+    position: absolute;
+    top: 65%;
+    right: 17%;
+    font-size: 1.5rem;
+}
+
+#stayBtn {
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    display: inline-block;
+    top: 73%;
+    right: 18%;
+    font-size: 1.5rem;
 }
 
 .dealer-container {
-    background-color: white;
-    border-width: 2px;
+    /* background-color: white; */
+    border-width: 10px;
     margin: 20px;
 }
 
 .player-container {
-    background-color: white;
+    /* background-color: white; */
     border-width: 2px;
     margin: 20px;
 }
+
+
+#message {
+    font-size: 2rem;
+}
+
