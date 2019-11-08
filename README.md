@@ -24,6 +24,7 @@
 
 **gh-pages link:** https://devanrterry.github.io/blackjack_game/
 
+![GameScreenshot](https://i.imgur.com/mFLNWjS.jpg)
 
 ![Wireframe](https://i.imgur.com/JguXeNH.png)
 
