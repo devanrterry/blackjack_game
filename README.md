@@ -1,4 +1,6 @@
- BlackJack Game Directions:
+ ##BlackJack
+ 
+ ####Game Directions:
 
 1. The game consists of two players - player and dealer. The goal is to get your hand as close to 21 as possible without             'busting' ie going over 21. 
 
@@ -17,10 +19,10 @@
     Note: the value of ace can either be 1 or 11, depending on what will suit your hand best.
 
 
-Languages Used: HTML, CSS, Javascript
+**Languages Used:** HTML, CSS, Javascript
 
 
-gh-pages link: https://devanrterry.github.io/blackjack_game/
+**gh-pages link:** https://devanrterry.github.io/blackjack_game/
 
 
 ![Wireframe](https://i.imgur.com/JguXeNH.png)
