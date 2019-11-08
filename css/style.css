@@ -2,62 +2,77 @@
     box-sizing: border-box;
   }
 
+:root {
+    --button-width: 140px;
+    --button-height: 40px;
+    --color: white;
+}
+
 body {
     margin: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: 'Montserrat', sans-serif;
-    background-color: rgb(134, 167, 77);
+    font-family: 'Lexend Giga', sans-serif;
+    background: url(http://www.spaziomeme.org/figure/Best-Green-Felt-Photos-2017-Blue-Maize.jpg);
+    background-size: cover;
+    color: white;
 }
 
 h1 {
     font-size: 2.5rem;
 }
 
-#turn {
-    
-}
-
 #begin {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Lexend Giga', sans-serif;
     font-size: 2rem;
 }
 
 #hitBtn {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Lexend Giga', sans-serif;
     margin: 10px;
     position: absolute;
     top: 65%;
-    right: 17%;
+    right: 15%;
     font-size: 1.5rem;
+    border-radius: 10%;
+    width: var(--button-width);
+    height: var(--button-height);
+    color: var(--color);
+    background-color: blue
 }
 
 #stayBtn {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Lexend Giga', sans-serif;
+    margin: 10px;
     position: absolute;
-    display: inline-block;
     top: 73%;
-    right: 18%;
+    right: 15%;
     font-size: 1.5rem;
+    border-radius: 10%;
+    width: var(--button-width);
+    height: var(--button-height);
+    color: var(--color);
+    background-color: red;
 }
 
 .dealer-container {
-    /* background-color: white; */
     border-width: 10px;
     margin: 20px;
 }
 
 .player-container {
-    /* background-color: white; */
     border-width: 2px;
     margin: 20px;
 }
 
+#player-total, #dealer-total {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
 
 #message {
     font-size: 2rem;
 }
-
-/* master branch something to test */
