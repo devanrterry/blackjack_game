@@ -1,6 +1,6 @@
- ##BlackJack
+ ## BlackJack
  
- ####Game Directions:
+ #### Game Directions:
 
 1. The game consists of two players - player and dealer. The goal is to get your hand as close to 21 as possible without             'busting' ie going over 21. 
 
