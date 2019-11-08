@@ -47,7 +47,7 @@ let dealerContainer = document.querySelector(".dealer-container");
 let playerContainer = document.querySelector(".player-container");
 let message = document.querySelector('h1')
 let turn = document.querySelector('#turn')
-
+let reset = document.querySelector('#begin');
 
 //---------event listeners--------//
 
@@ -56,9 +56,11 @@ hitBtn.addEventListener('click', dealCard);
 stayBtn.addEventListener('click', stay);
 hitBtn.style.display = 'none';
 stayBtn.style.display = 'none';
+reset.addEventListener('click', init);
 
 
 //---------functions--------//
+
 
 function init(){
     turn.style.display = 'block';
@@ -69,11 +71,9 @@ function init(){
     playerTurn = true;
     playerTotal = 0;
     dealerTotal = 0;
-    // message.textContent = '';
     document.querySelector('h1').textContent = 'Good Luck!';
     beginGame();
     render();
-    begin.style.display = 'none';
 }
 
 function beginGame(){
@@ -81,12 +81,10 @@ function beginGame(){
     stayBtn.style.display = 'inline-block';
     createDeck();
     for (let i = 0; i < 2; ++i){
-        console.log('hitting first for loop')
         dealCard();
     }
     playerTurn = false;
     for (let i = 0; i < 2; ++i){
-        console.log('hitting second for loop')
         dealCard();
     }
     dealerHand[0].faceUp = false;
@@ -96,9 +94,7 @@ function beginGame(){
 
 
 function createReset(){
-    let reset = document.querySelector('#begin');
     reset.textContent = 'Reset Game';
-    reset.addEventListener('click', init);
 };
 
 function createCard(card, container){
@@ -148,8 +144,8 @@ function getCardValue(card){
 //This function will choose a random card from the deck and is called within the dealCard function.
 
 function getRandomCard(){
-    let random = Math.floor(Math.random() * 51);
-    return cardDeck[random];
+    let random = Math.floor(Math.random() * cardDeck.length);
+    return cardDeck.splice(random, 1)[0];
 }
 
 
@@ -171,27 +167,28 @@ function createDeck() {
 function dealCard() {
 
     let nextCard = getRandomCard();
+
     if (playerTurn){
         nextCard.faceUp = true;
         playerHand.push(nextCard);
     } else {
         dealerHand.push(nextCard);
     }
-
-    playerTotal = countHandTotal(playerHand);
-    if (playerTotal >= 21){
-        stay();
-        console.log("HITTING 183: ", message)
+    if(playerHand.length >= 2 && dealerHand.length >= 2) {
+        playerTotal = countHandTotal(playerHand);
+        if (playerTotal >= 21){
+            stay();
+        }
+        checkWinnerAtBegin();
+        render();
     }
-    checkWinnerAtBegin();
-    render();
 }
 
 function checkWinnerAtBegin(){
     let playerCheck = countHandTotal(playerHand);
     let dealerCheck = countHandTotal(dealerHand);
-    console.log('totals:', playerCheck, dealerCheck);
     if(playerCheck  === 21 || dealerCheck === 21){
+        createReset()
         determineWinner();
     };
 }
@@ -213,8 +210,11 @@ function whosTurn(){
 
   
 function stay() {
-    dealerHand[0].faceUp = true;
-    console.log("Stay");
+
+    if (dealerHand.length !== 0) {
+        dealerHand[0].faceUp = true;
+    } 
+
     playerTurn = false;
     playerTotal = countHandTotal(playerHand)
     if (playerTotal >= 21 || !playerTurn) {
@@ -288,18 +288,15 @@ function determineWinner(){
         } else if (dealerPoints > 21 && playerPoints <= 21){
             message.textContent = 'Dealer busts! Player wins!'
         } else if (dealerPoints === 21 && playerPoints < 21){
-            message.textContent = 'Dealer wins!'
-            console.log("DEALER WINS HIT", message)
+            message.textContent = 'Blackjack! Dealer wins!'
         } else if (playerPoints === 21 && dealerPoints < 21){
-            message.textContent = 'Player wins!'
-            console.log("PLAYER WINS HIT", message)
+            message.textContent = 'Blackjack! Player wins!'
         } else if (playerPoints < 21 && dealerPoints < 21 && playerPoints > dealerPoints){
             message.textContent = 'Player wins!'
         } else if (playerPoints < 21 && dealerPoints < 21 && dealerPoints > playerPoints){
             message.textContent = 'Dealer wins!'
         } else if (playerPoints === dealerPoints){
             message.textContent = 'Its a tie!'
-            console.log("TIE HIT", message)
     } 
     gameOver = true;
 }
