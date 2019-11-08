@@ -2,6 +2,16 @@
 
 //---------constants--------//
 
+//Issues to fix: 
+//1. Get Rid of #turn text when game is decided. 
+//2. If player busts, show game results immediately instead of having to click 'Stay'
+//3. Issue when dealer is dealt 20 on the first round, it's dealing another card and automatically busting. On 
+//   first round of game, it's drawing another card for the dealer even if the total exceeds 15. 
+//4. Reformat buttons so they move as the container grows.
+//5. Add a face down card to the side that will serve as the "deck".
+//6. Add a green felt background image.
+
+
 const SUITS = ['diamonds', 'hearts', 'spades', 'clubs'];
 
 const VALUES = ['A', '02', '03', '04', '05', '06', '07', '08', '09', 
@@ -15,7 +25,7 @@ let dealerHand = [];
 let playerTurn = true;
 let playerTotal = 0;
 let dealerTotal = 0;
-let gameComplete = false;
+let gameOver = false;
 
 //Using class to create a card object that will be pushed into the cardDeck array whenever the createDeck function is called.
 
@@ -35,10 +45,9 @@ let hitBtn = document.querySelector('#hitBtn');
 let stayBtn = document.querySelector('#stayBtn');
 let dealerContainer = document.querySelector(".dealer-container");
 let playerContainer = document.querySelector(".player-container");
-let message = document.querySelector('#message')
+let message = document.querySelector('h1')
+let turn = document.querySelector('#turn')
 
-
-// imgSrc = document.querySelector('#card-container img')
 
 //---------event listeners--------//
 
@@ -52,41 +61,56 @@ stayBtn.style.display = 'none';
 //---------functions--------//
 
 function init(){
+    turn.style.display = 'block';
+    gameOver = false;
     cardDeck = [];
     playerHand = [];
     dealerHand = [];
     playerTurn = true;
     playerTotal = 0;
     dealerTotal = 0;
-    gameComplete = false;
+    // message.textContent = '';
+    document.querySelector('h1').textContent = 'Good Luck!';
     beginGame();
-    message.textContent = '';
-
+    render();
+    begin.style.display = 'none';
 }
 
 function beginGame(){
     hitBtn.style.display = 'inline-block';
     stayBtn.style.display = 'inline-block';
     createDeck();
-
     for (let i = 0; i < 2; ++i){
+        console.log('hitting first for loop')
         dealCard();
     }
-
     playerTurn = false;
     for (let i = 0; i < 2; ++i){
+        console.log('hitting second for loop')
         dealCard();
     }
-
+    dealerHand[0].faceUp = false;
     playerTurn = true;
     createReset();
 }
+
 
 function createReset(){
     let reset = document.querySelector('#begin');
     reset.textContent = 'Reset Game';
     reset.addEventListener('click', init);
 };
+
+function createCard(card, container){
+    let nextCardImg = document.createElement('img');
+        nextCardImg.setAttribute("src", cardImg(card));
+        nextCardImg.style.width = "100px";
+        nextCardImg.style.border = "1px solid black";
+        nextCardImg.style.borderRadius = "5px";
+        nextCardImg.style.margin = "10px";
+        nextCardImg.style.backgroundColor = '#fff';
+        container.appendChild(nextCardImg);
+}
 
 function render(){
     document.querySelector('#turn').textContent = whosTurn() + "\'s Turn";
@@ -95,23 +119,11 @@ function render(){
     dealerContainer.innerHTML = '';
 
     playerHand.forEach(function(i){
-        let nextCardImg = document.createElement('img');
-        nextCardImg.setAttribute("src", cardImg(i));
-        nextCardImg.style.width = "100px";
-        nextCardImg.style.border = "1px solid black";
-        nextCardImg.style.borderRadius = "5px";
-        nextCardImg.style.margin = "10px";
-        playerContainer.appendChild(nextCardImg);
+        createCard(i, playerContainer);
     });
 
     dealerHand.forEach(function(i){
-        let nextCardImg = document.createElement('img');
-        nextCardImg.setAttribute("src", cardImg(i));
-        nextCardImg.style.width = "100px";
-        nextCardImg.style.border = "1px solid black";
-        nextCardImg.style.borderRadius = "5px";
-        nextCardImg.style.margin = "10px";
-        dealerContainer.appendChild(nextCardImg);
+       createCard(i, dealerContainer);
     });
 
     showScores();
@@ -119,6 +131,7 @@ function render(){
 }
 
 //Using the switch function technique to assign numerical values to the VALUES array.
+
 function getCardValue(card){
     switch (card.value){
         case 'J':   
@@ -156,19 +169,33 @@ function createDeck() {
 //This function sets the image source of the card container to whatever card was drawn through the getRandomCard funciton.
 
 function dealCard() {
+
     let nextCard = getRandomCard();
     if (playerTurn){
+        nextCard.faceUp = true;
         playerHand.push(nextCard);
     } else {
         dealerHand.push(nextCard);
     }
-    let totalCheck = countHandTotal(playerHand)
-    // console.log("TOTAL CHECK: ", totalCheck)
-    if(totalCheck == 21){
-        determineWinner()
+
+    playerTotal = countHandTotal(playerHand);
+    if (playerTotal >= 21){
+        stay();
+        console.log("HITTING 183: ", message)
     }
+    checkWinnerAtBegin();
     render();
 }
+
+function checkWinnerAtBegin(){
+    let playerCheck = countHandTotal(playerHand);
+    let dealerCheck = countHandTotal(dealerHand);
+    console.log('totals:', playerCheck, dealerCheck);
+    if(playerCheck  === 21 || dealerCheck === 21){
+        determineWinner();
+    };
+}
+
 
 //This function sets the image of the card when called in the dealCard function above.
 
@@ -186,19 +213,31 @@ function whosTurn(){
 
   
 function stay() {
-    playerTurn ? playerTurn = false : playerTurn = true;
-    if (playerTurn === false) {
+    dealerHand[0].faceUp = true;
+    console.log("Stay");
+    playerTurn = false;
+    playerTotal = countHandTotal(playerHand)
+    if (playerTotal >= 21 || !playerTurn) {
         dealerPlay();
-        determineWinner();
     }
-    render();   
+    render();  
+    if (gameOver){
+        turn.style.display = 'none';
+        stayBtn.style.display = 'none';
+    } else {
+        turn.style.display = 'block';
+    }
+    hitBtn.style.display = 'none';
+    begin.style.display = 'block';
 }
 
 function dealerPlay(){
-    while (dealerTotal <= 15){
+    dealerTotal = countHandTotal(dealerHand)
+    while (dealerTotal <= 15 && playerTotal < 21){
         dealCard();
         dealerTotal = countHandTotal(dealerHand)
     }
+    determineWinner();
 }
 
 
@@ -206,7 +245,6 @@ function showScores(){
 
     playerPoints = countHandTotal(playerHand);
     dealerPoints = countHandTotal(dealerHand);
-    // console.log(dealerPoints);
 
     let playerTotal = document.createElement('div');
     playerTotal.id = 'player-total';
@@ -223,12 +261,14 @@ function countHandTotal(handArray){
     let sum = 0;
     let aceArr = [];
     handArray.forEach(function(card){
+      if (card.faceUp === true){
         if (card.value === 'A'){
             aceArr.push(card);
         }
         else {
             sum += getCardValue(card);
         }
+      }
     });
     for (ace in aceArr){
         if ((sum + 11) < 22){
@@ -243,24 +283,25 @@ function countHandTotal(handArray){
 function determineWinner(){
     let playerPoints = countHandTotal(playerHand);
     let dealerPoints = countHandTotal(dealerHand);
-    // console.log("Hitting determineWinner Function")
-      if (playerPoints > 21){
-        message.textContent = 'Bust! Dealer wins!'
-    } else if (dealerPoints > 21 && playerPoints <= 21){
-        message.textContent = 'Dealer busts! Player wins!'
-    } else if (dealerPoints === 21 && playerPoints < 21){
-        message.textContent = 'Dealer wins!'
-    } else if (playerPoints === 21 && dealerPoints < 21){
-        message.textContent = 'Player wins!'
-    } else if (playerPoints < 21 && dealerPoints < 21 && playerPoints > dealerPoints){
-        message.textContent = 'Player wins!'
-    } else if (playerPoints < 21 && dealerPoints < 21 && dealerPoints > playerPoints){
-        message.textContent = 'Dealer wins!'
-    } else if (playerPoints === dealerPoints){
-        message.textContent = 'Its a tie!'
-    } else {
-        // console.log('hitting else in determineWinner')
-    }
+    if (playerPoints > 21){
+          message.textContent = 'Bust! Dealer wins!'
+        } else if (dealerPoints > 21 && playerPoints <= 21){
+            message.textContent = 'Dealer busts! Player wins!'
+        } else if (dealerPoints === 21 && playerPoints < 21){
+            message.textContent = 'Dealer wins!'
+            console.log("DEALER WINS HIT", message)
+        } else if (playerPoints === 21 && dealerPoints < 21){
+            message.textContent = 'Player wins!'
+            console.log("PLAYER WINS HIT", message)
+        } else if (playerPoints < 21 && dealerPoints < 21 && playerPoints > dealerPoints){
+            message.textContent = 'Player wins!'
+        } else if (playerPoints < 21 && dealerPoints < 21 && dealerPoints > playerPoints){
+            message.textContent = 'Dealer wins!'
+        } else if (playerPoints === dealerPoints){
+            message.textContent = 'Its a tie!'
+            console.log("TIE HIT", message)
+    } 
+    gameOver = true;
 }
 
 
