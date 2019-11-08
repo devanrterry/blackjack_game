@@ -44,21 +44,19 @@ h1 {
 }
 
 .dealer-container {
-    background-color: white;
+    /* background-color: white; */
     border-width: 10px;
     margin: 20px;
 }
 
 .player-container {
-    background-color: white;
+    /* background-color: white; */
     border-width: 2px;
     margin: 20px;
 }
 
-img {
-
-}
 
 #message {
     font-size: 2rem;
 }
+
