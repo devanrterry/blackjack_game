@@ -73,7 +73,7 @@ function init() {
   playerTotal = 0;
   dealerTotal = 0;
   document.querySelector("h1").textContent =
-    "May the odds be ever in your favor!";
+    "May the odds be in your favor!";
   beginGame();
   render();
 }
